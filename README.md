@@ -1,4 +1,5 @@
 *Allows tracking shared Notion page views. View count will only display in the shared page accessed by a shared link, not through your Notion app*
+
 https://youtu.be/0Ko6VJ2r8ns
 
 # Local development
