@@ -1,0 +1,83 @@
+org: mashkovtsevlx
+app: notion-page-views
+service: notion-page-views
+
+custom:
+  customDomain:
+    domainName: notion.inso-global.com
+    stage: ${sls:stage}
+    createRoute53Record: true
+    endpointType: regional
+    apiType: http
+  notionPageViewsTableName: '${self:app}-${sls:stage}'
+  dynamodb:
+    start:
+      migrate: true
+    stages:
+      - dev
+    ttl:
+      - table: '${self:custom.notionPageViewsTableName}'
+        field: 'ttl'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage,'dev'}
+  endpointType: REGIONAL
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchGetItem
+          Resource:
+            - Fn::GetAtt: [ NotionPageViewsTable, Arn ]
+            - Fn::Join:
+                - "/"
+                - - { "Fn::GetAtt": [ NotionPageViewsTable, Arn ] }
+                  - "index/*"
+  environment:
+    TABLE_NAME: ${self:custom.notionPageViewsTableName}
+
+functions:
+  main:
+    handler: handler.main
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: GET
+      - httpApi:
+          path: /{proxy+}
+          method: HEAD
+
+resources:
+  Resources:
+    NotionPageViewsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: domain
+            AttributeType: S
+          - AttributeName: pageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: domain
+            KeyType: HASH
+          - AttributeName: pageId
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.notionPageViewsTableName}
+
+plugins:
+  - serverless-dynamodb-ttl
+  - serverless-dynamodb-local
+  - serverless-offline
+  - serverless-domain-manager

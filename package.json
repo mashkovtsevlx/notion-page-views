@@ -1,0 +1,25 @@
+{
+  "name": "notion-page-views",
+  "version": "1.0.0",
+  "description": "<!-- title: 'AWS Simple HTTP Endpoint example in NodeJS' description: 'This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.' layout: Doc framework: v3 platform: AWS language: nodeJS authorLink: 'https://github.com/serverless' authorName: 'Serverless, inc.' authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4' -->",
+  "main": "handler.js",
+  "scripts": {
+    "start_local": "sls offline start",
+    "dynamodb_gui": "DYNAMO_ENDPOINT=http://localhost:8000 dynamodb-admin",
+    "dynamodb_install_local": "sls dynamodb install",
+    "start_ngrok": "ngrok http 3000"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1286.0",
+    "serverless-dynamodb-ttl": "^0.1.1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dynamodb-admin": "^4.5.0",
+    "serverless": "^3.26.0",
+    "serverless-domain-manager": "^6.2.1",
+    "serverless-dynamodb-local": "^0.2.40",
+    "serverless-offline": "^12.0.3"
+  }
+}
