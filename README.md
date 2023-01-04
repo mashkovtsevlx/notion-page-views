@@ -2,6 +2,7 @@
 https://youtu.be/0Ko6VJ2r8ns
 
 # Local development
+0. `npm i`
 1. `serverless login`
 2. `npm run dynamodb_install_local`
 3. `serverless plugin install -n serverless-dynamodb-local`
